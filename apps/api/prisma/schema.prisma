@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleName {
+  CLIENT
+  SPECIALIST
+  MANAGER
+  ADMIN
+}
+
+enum LeadStatus {
+  NEW
+  QUALIFIED
+  REJECTED
+  CONVERTED
+}
+
+enum ProjectStatus {
+  NEW
+  IN_PROGRESS
+  ON_HOLD
+  DONE
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+}
+
+enum PaymentStatus {
+  CREATED
+  PENDING
+  SUCCEEDED
+  FAILED
+}
+
+model User {
+  id           String     @id @default(cuid())
+  phone        String     @unique
+  email        String?
+  fullName     String?
+  roleId       String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  role         Role       @relation(fields: [roleId], references: [id])
+  leads        Lead[]
+  projects     Project[]  @relation("ClientProjects")
+  tasks        Task[]     @relation("AssigneeTasks")
+  messages     Message[]
+  files        FileAsset[]
+  consents     Consent[]
+  auditLogs    AuditLog[] @relation("ActorAuditLogs")
+}
+
+model Role {
+  id    String   @id @default(cuid())
+  name  RoleName @unique
+  users User[]
+}
+
+model Service {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  basePrice   Int
+  isActive    Boolean   @default(true)
+  packages    Package[]
+  leads       Lead[]
+  createdAt   DateTime  @default(now())
+}
+
+model Package {
+  id          String   @id @default(cuid())
+  serviceId   String
+  title       String
+  description String
+  price       Int
+  service     Service  @relation(fields: [serviceId], references: [id])
+}
+
+model Lead {
+  id           String     @id @default(cuid())
+  clientId     String
+  serviceId    String
+  answersJson  String
+  status       LeadStatus @default(NEW)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  client       User       @relation(fields: [clientId], references: [id])
+  service      Service    @relation(fields: [serviceId], references: [id])
+  project      Project?
+}
+
+model Project {
+  id            String        @id @default(cuid())
+  title         String
+  clientId      String
+  leadId        String?       @unique
+  status        ProjectStatus @default(NEW)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  client        User          @relation("ClientProjects", fields: [clientId], references: [id])
+  lead          Lead?         @relation(fields: [leadId], references: [id])
+  tasks         Task[]
+  messages      Message[]
+  files         FileAsset[]
+  payments      Payment[]
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  projectId   String
+  assigneeId  String?
+  title       String
+  description String?
+  status      TaskStatus @default(TODO)
+  dueAt       DateTime?
+  project     Project    @relation(fields: [projectId], references: [id])
+  assignee    User?      @relation("AssigneeTasks", fields: [assigneeId], references: [id])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  projectId String
+  authorId  String
+  body      String
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id])
+}
+
+model FileAsset {
+  id        String   @id @default(cuid())
+  projectId String
+  uploaderId String
+  url       String
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id])
+  uploader  User     @relation(fields: [uploaderId], references: [id])
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  projectId   String?
+  provider    String
+  externalId  String?
+  amount      Int
+  status      PaymentStatus @default(CREATED)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  project     Project?      @relation(fields: [projectId], references: [id])
+}
+
+model Consent {
+  id             String   @id @default(cuid())
+  userId         String
+  policyVersion  String
+  acceptedAt     DateTime @default(now())
+  source         String
+  user           User     @relation(fields: [userId], references: [id])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  action     String
+  actorId    String?
+  metadata   String?
+  createdAt  DateTime @default(now())
+  actor      User?    @relation("ActorAuditLogs", fields: [actorId], references: [id])
+}
