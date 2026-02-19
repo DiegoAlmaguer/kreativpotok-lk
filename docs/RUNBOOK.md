@@ -6,10 +6,11 @@
 
 ## Setup
 1. Copy env: `cp .env.example .env`
-2. Install dependencies: `npm ci`
-3. Run migrations: `npm run db:migrate`
-4. Seed baseline data: `npm run db:seed`
-5. Start API: `npm run dev`
+2. Ensure `package-lock.json` is present and up to date (required for reproducible builds and CI).
+3. Install dependencies: `npm ci`
+4. Run migrations: `npm run db:migrate`
+5. Seed baseline data: `npm run db:seed`
+6. Start API: `npm run dev`
 
 ## Core commands
 - Lint: `npm run lint`
