@@ -1,0 +1,33 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  color: #f7f8ff;
+  background: #151924;
+}
+
+body {
+  margin: 0;
+}
+
+.app {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  padding: 24px;
+}
+
+h1 {
+  margin: 0;
+}
+
+.card {
+  padding: 16px;
+  border-radius: 12px;
+  background: #23283a;
+  display: grid;
+  gap: 8px;
+}
+
+code {
+  color: #9ee2ff;
+}
