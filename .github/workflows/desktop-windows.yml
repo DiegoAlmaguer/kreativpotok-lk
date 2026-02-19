@@ -1,0 +1,56 @@
+name: Desktop Windows Build
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'desktop-v*'
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.18.0'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm run test
+
+      - name: Build desktop renderer
+        run: npm run build -w @kreativpotok/desktop
+
+      - name: Package desktop (NSIS + Portable)
+        run: npm run package -w @kreativpotok/desktop
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: kreativpotok-desktop-windows
+          path: apps/desktop/release/*.exe
+          if-no-files-found: error
+
+      - name: Publish GitHub Release assets (tags only)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: apps/desktop/release/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

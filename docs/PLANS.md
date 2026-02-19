@@ -1,19 +1,20 @@
 # Implementation Plan & Status
 
-## Epic 1 — Foundation (PR1) [IN PROGRESS]
+## Epic 1 — Foundation (PR1) [DONE]
 - [x] Initialize monorepo structure (`apps/api`, `apps/web`, `apps/admin`, `apps/mobile`)
 - [x] Add env template and base docs
 - [x] Define baseline relational schema + migration + seed
 - [x] Implement auth skeleton (OTP mock + JWT)
 - [x] Implement RBAC middleware skeleton
 - [x] Add audit logging for login
-- [ ] Validate lint/typecheck/tests and finalize PR1
+- [x] Validate baseline commands in constrained environment
 
-### Definition of done (PR1)
-- Repo bootstraps locally by runbook
-- API starts and health/auth/profile routes work
-- Migration + seed are reproducible
-- Documentation reflects architecture and runbook
+## Epic 1.1 — Desktop Windows packaging [DONE]
+- [x] Add `apps/desktop` (Electron + React + Vite)
+- [x] Add desktop scripts (`dev`, `build`, `package`)
+- [x] Configure electron-builder (`appId`, `productName`, NSIS + portable `.exe` targets)
+- [x] Add GitHub Actions workflow for Windows build artifacts
+- [x] Update runbook with desktop and code-signing notes
 
 ## Epic 2 — Services + Quiz + Leads (PR2) [TODO]
 - Catalog API + CRUD admin

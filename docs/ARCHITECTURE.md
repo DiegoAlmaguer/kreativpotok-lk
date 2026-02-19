@@ -12,6 +12,7 @@ Repository was empty, so **Variant A** selected:
 - `apps/web` — client web/PWA placeholder
 - `apps/admin` — admin panel placeholder
 - `apps/mobile` — mobile app placeholder
+- `apps/desktop` — Electron desktop shell (React + Vite, Windows packaging)
 - `docs/*` — product/engineering documentation
 
 ## Backend module map (PR1)
@@ -28,3 +29,9 @@ Core entities: users, roles, services, packages, leads, projects, tasks, message
 - Replace SQLite local dev with PostgreSQL in deployment via `DATABASE_URL`
 - Add websocket gateway for project chat in PR4
 - Implement Next.js apps in PR2+
+
+
+## Desktop delivery
+- Electron wraps Vite React renderer for quick cross-platform desktop bootstrap.
+- `electron-builder` produces Windows NSIS installer and portable `.exe`.
+- CI workflow builds and uploads `.exe` artifacts on push to `main` and manual dispatch.
