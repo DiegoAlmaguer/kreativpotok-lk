@@ -1,0 +1,10 @@
+node_modules
+.env
+.env.*
+!.env.example
+dist
+coverage
+*.log
+apps/api/generated
+apps/api/prisma/dev.db
+apps/api/prisma/dev.db-journal
