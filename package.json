@@ -1,0 +1,17 @@
+{
+  "name": "kreativpotok",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @kreativpotok/api",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "db:migrate": "npm run prisma:migrate -w @kreativpotok/api",
+    "db:seed": "npm run prisma:seed -w @kreativpotok/api"
+  }
+}
